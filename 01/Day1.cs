@@ -12,8 +12,8 @@ public static class Day1 {
                 .Select(n => n.Value)
                 .ToArray()
             into nums
-            select nums.Length > 1 ? int.Parse(nums[0] + nums[^1]) : int.Parse(nums[0]) * 11
-            into firstLastNum
-            select firstLastNum).Sum());
+            select nums.Length == 0 ? 0
+                : nums.Length > 1 ? int.Parse(nums[0] + nums[^1])
+                : int.Parse(nums[0]) * 11).Sum());
     }
 }
