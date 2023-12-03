@@ -15,13 +15,21 @@ public static class Day3 {
     }
 
     private static bool Valid(int rc, int cc) {
-        bool res = false;
         foreach (int[] d in Dir) {
             if (char.IsDigit(Lines[rc + d[0]][cc + d[1]])) continue;
             if (Lines[rc + d[0]][cc + d[1]] != '.')
-                res = true;
+                return true;
         }
-        return res;
+        return false;
+    }
+
+    private static (int, int) IsGearNum(int rc, int cc) {
+        foreach (int[] d in Dir) {
+            if (char.IsDigit(Lines[rc + d[0]][cc + d[1]])) continue;
+            if (Lines[rc + d[0]][cc + d[1]] == '*')
+                return (rc + d[0], cc + d[1]);
+        }
+        return (-1, -1);
     }
 
     public static void Part1() {
@@ -35,11 +43,41 @@ public static class Day3 {
                     if (Valid(i, c)) v = true;
                     n += Lines[i][c]; c++;
                 }
-                if (n != "" && v) total += int.Parse(n);
+                if (v) total += int.Parse(n);
+                c++;
+            }
+        }
+        Console.WriteLine(total);
+    }
+
+    public static void Part2() {
+        int total = 0;
+        Dictionary<(int, int), List<int>> gears = new();
+        for (int i = 0; i < Lines.Count; i++) {
+            int c = 0;
+            while (c < Lines[i].Length) {
+                string n = "";
+                bool v = false;
+                (int,  int) gearLoc = new(-1,-1);
+                while (char.IsDigit(Lines[i][c])) {
+                    if (IsGearNum(i, c).Item1 != -1) {
+                        gearLoc = IsGearNum(i, c);
+                        v = true;
+                    }
+                    n += Lines[i][c]; c++;
+                }
+                if (v) {
+                    if (gears.ContainsKey(gearLoc) && gears[gearLoc].Count == 1)
+                        gears[gearLoc].Add(int.Parse(n));
+                    else gears.Add(gearLoc, new List<int> {int.Parse(n)});
+                }
                 c++;
             }
         }
 
+        foreach (KeyValuePair<(int, int), List<int>> gr in gears) {
+            if (gr.Value.Count == 2) total += gr.Value[0] * gr.Value[1];
+        }
         Console.WriteLine(total);
     }
 }
