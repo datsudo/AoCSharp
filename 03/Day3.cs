@@ -15,12 +15,9 @@ public static class Day3 {
     }
 
     private static bool Valid(int rc, int cc) {
-        foreach (int[] d in Dir) {
-            if (char.IsDigit(Lines[rc + d[0]][cc + d[1]])) continue;
-            if (Lines[rc + d[0]][cc + d[1]] != '.')
-                return true;
-        }
-        return false;
+        return Dir
+            .Where(d => !char.IsDigit(Lines[rc + d[0]][cc + d[1]]))
+            .Any(d => Lines[rc + d[0]][cc + d[1]] != '.');
     }
 
     private static (int, int) IsGearNum(int rc, int cc) {
@@ -51,7 +48,6 @@ public static class Day3 {
     }
 
     public static void Part2() {
-        int total = 0;
         Dictionary<(int, int), List<int>> gears = new();
         for (int i = 0; i < Lines.Count; i++) {
             int c = 0;
@@ -75,9 +71,9 @@ public static class Day3 {
             }
         }
 
-        foreach (KeyValuePair<(int, int), List<int>> gr in gears) {
-            if (gr.Value.Count == 2) total += gr.Value[0] * gr.Value[1];
-        }
+        int total = gears
+            .Where(gr => gr.Value.Count == 2)
+            .Sum(gr => gr.Value[0] * gr.Value[1]);
         Console.WriteLine(total);
     }
 }
