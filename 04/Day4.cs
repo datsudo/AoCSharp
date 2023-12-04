@@ -16,6 +16,21 @@ public static class Day4 {
             select GetNums(cards[0]).Intersect(GetNums(cards[1])).Count()
             into winNums
             select (int)Math.Pow(2, winNums - 1)).Sum();
+
         Console.WriteLine(points);
+    }
+
+    public static void Part2() {
+        Dictionary<int, int> cpLog = new();
+        for (int i = 0; i < Lines.Count; i++) {
+            cpLog.TryAdd(i, 1);
+            List<string> cards = Lines[i].Split(": ")[1].Split(" | ").ToList();
+            int winNums = GetNums(cards[0]).Intersect(GetNums(cards[1])).Count();
+            for (int j = 0; j < winNums; j++) {
+                cpLog.TryAdd(i+j+1, 1);
+                cpLog[i+j+1] += cpLog[i];
+            }
+        }
+        Console.WriteLine(cpLog.Sum(c => c.Value));
     }
 }
