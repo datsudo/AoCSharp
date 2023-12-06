@@ -19,9 +19,11 @@ public static class Day6 {
     }
 
     public static void Part2() {
-        long nWays = 0, realTime = long.Parse(String.Join("", Time)),
+        long ht = 0, nWays = 0, realTime = long.Parse(String.Join("", Time)),
             realDistance = long.Parse(String.Join("", Distance));
-        while (ht <= realTime) {if ((realTime - ht) * ht > realDistance) nWays++;}
+        while (ht <= realTime) {
+            if ((realTime - ht) * ht > realDistance) nWays++; ht++;
+        }
         Console.WriteLine(nWays);
     }
 }
